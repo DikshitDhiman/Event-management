@@ -1,0 +1,18 @@
+<div class="contact">
+		<div class="container">
+			<div class="contact-main">
+				<h3 class="title">DashBoard</h3>
+			</div>
+		</div>
+</div>
+
+
+
+<table ng-table="vm.tableParams" class="table" show-filter="true">
+    <tr ng-repeat="user in $data">
+        <td title="'Name'" filter="{ name: 'text'}" sortable="'name'">
+            {{user.name}}</td>
+        <td title="'Age'" filter="{ age: 'number'}" sortable="'age'">
+            {{user.age}}</td>
+    </tr>
+</table>

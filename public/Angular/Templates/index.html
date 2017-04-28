@@ -1,0 +1,158 @@
+
+<!DOCTYPE html>
+<html>
+<head>
+<title>Event Manager</title>
+<!-- Custom Theme files -->
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+<meta name="keywords" content="Florence Responsive web template, Bootstrap Web Templates, Flat Web Templates, Android Compatible web template, 
+	Smartphone Compatible web template, free webdesigns for Nokia, Samsung, LG, SonyEricsson, Motorola web design" />
+
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/angular.js/1.6.1/angular.min.js"></script>
+<script src = "https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.4.2/angular-ui-router.js"></script>
+<!--<script src = "https://cdnjs.cloudflare.com/ajax/libs/angular-ui-router/0.4.2/angular-ui-router.js"></script>-->
+<link rel="stylesheet"; href="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.css">
+<script src="https://unpkg.com/ng-table@2.0.2/bundles/ng-table.min.js"></script>
+
+
+<script type="application/x-javascript"> addEventListener("load", function() { setTimeout(hideURLbar, 0); }, false); function hideURLbar(){ window.scrollTo(0,1); } </script>
+<!-- //Custom Theme files -->
+<link href="../Angular/Templates/css/bootstrap.css" type="text/css" rel="stylesheet" media="all">
+<link href="../Angular/Templates/css/style.css" type="text/css" rel="stylesheet" media="all">
+<!-- js -->
+
+
+
+
+
+
+
+<script src="../Angular/Templates/js/jquery-1.11.1.min.js"></script> 
+<!-- //js -->	
+</head>
+<body ng-app = "myApp" ng-controller = "myController">
+	<!--header-->
+	<div class="top-nav">
+		<nav class="navbar navbar-default">
+			<div class="container">
+				<div class="navbar-header navbar-right">
+					<button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#bs-example-navbar-collapse-1">
+						<span class="sr-only">Toggle navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+					</button>
+					<!--<form class="navbar-form navbar-right search-box">
+						<div class="form-group">
+							<input type="text" class="form-control" placeholder="Search">
+							<button type="submit" class="btn btn-default" aria-label="Left Align">
+								<span class="glyphicon glyphicon-search" aria-hidden="true"></span>
+							</button>
+						</div>
+					</form>	-->
+					<div class="logo">
+						<h1><a href="/">Eventers</a></h1>
+					</div>
+					<div class="clearfix"> </div>
+				</div>
+				<!--navigation-->
+				<!-- Collect the nav links, forms, and other content for toggling -->
+				<div class="collapse navbar-collapse" id="bs-example-navbar-collapse-1">
+					<ul class="nav navbar-nav navbar-left cl-effect-5">
+						<li><a ui-sref = "home" class="active"><span data-hover="Home">Home</span></a></li>
+						<li><a ui-sref = "about"> <span data-hover="About">About </span> </a></li>
+						<li><a ui-sref="services"><span data-hover="Services">Services</span></a></li>
+			
+						<li><a ui-sref="gallery"><span data-hover="Gallery">Gallery</span></a></li>
+						<li><a ui-sref="contact"><span data-hover="Contact"> Contact</span></a></li>
+						
+					</ul>
+					<ul class="nav navbar-nav navbar-right cl-effect-5">
+						
+						<li ng-show = "authenticated"><a ui-sref="dashboard"><span data-hover="DashBoard"> DashBoard</span></a></li>
+						<li ng-show = "authenticated"><a ui-sref="userProfile"><span data-hover="Profile">Profile</span></a></li>
+						
+						<li ng-hide = "authenticated"><a ui-sref="signin"><span data-hover="SignIn"> SignIn</span></a></li>
+						<li ng-hide = "authenticated"><a ui-sref="signup"><span data-hover="SignUp"> SignUp</span></a></li>
+						<li ng-show = "authenticated"><a ui-sref="signout"><span data-hover="SignOut"> SignOut</span></a></li>
+					</ul>
+					<div class="clearfix"> </div>
+				</div><!--//navigation-->
+			</div>	
+		</nav>		
+	</div>	
+	<!--//header-->
+	<!--banner-->
+	<div class="banner about-bnr">
+		<div class="banner-info about-bnr-info">
+			<h2 class="hdng">The Epic Events Planner</h2>
+			<p>Our Creativity make your day special</p>
+		</div>
+	</div>			
+	<!--//banner-->
+	<ui-view></ui-view>
+	<!--footer-->
+	<div class="footer about-footer">	
+		<div class="col-md-8 footer-left">
+			<div class="col-md-4 footer-text">
+				<h3>Navigation</h3>
+				<ul>
+					<li><a ui-sref="home">Home</a></li>			
+					<li><a ui-sref="about">About</a></li>			
+					<li><a ui-sref="scontact">Contact</a></li>
+				</ul>
+			</div>
+			<div class="col-md-4 footer-text">
+				<h3>Popular</h3>
+				 <ul>
+					 <li><a ui-sref="#">Deserunt Mollit</a></li>
+					 <li><a ui-sref="#">Nulla Pariatur</a></li>
+					 <li><a ui-sref="#">Voluptate Velit</a></li>
+				 </ul>
+			</div>
+			<div class="col-md-4 footer-text">
+				<h3>Get In Touch</h3>
+				<ul>
+					<li>Ola-ola street jump,</li>
+					<li>260-14 City, Country</li>
+					<li><a href="mailto:info@example.com">info@example.com</a></li>
+				</ul>			
+			</div>
+			<div class="clearfix"> </div>
+		</div>
+		<div class="col-md-4 footer-right">
+			<div class=" icons">
+				<ul>
+					<li><a href="#" class="twitter"> </a></li>
+					<li><a href="#" class="twitter facebook"> </a></li>
+					<li><a href="#" class="twitter chrome"> </a></li>
+					<li><a href="#" class="twitter pinterest"> </a></li>
+					<li><a href="#" class="twitter linkedin"> </a></li>
+				</ul>
+			</div>
+			<div class="subscribe">
+				<form>
+					<input type="text" value="Email" onfocus="this.value = '';" onblur="if (this.value == '') {this.value = 'Email';}" required="">
+					<input type="submit" value="Subscribe" >
+				</form>
+			</div>
+		</div>
+		<div class="clearfix"> </div>
+		<div class="container">
+			<div class="copy-right">
+				<p> © 2016 Florence . All rights reserved | Design by <a href="#">Creative Team</a></p>	
+			</div>
+		</div>
+	</div>
+</div>
+	<!--//footer-->
+	<!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+
+	
+    <script src="../Angular/Templates/js/bootstrap.js"></script>
+	<script src = "../Angular/Controller/stateProvider.js"></script>
+</body>
+</html>

@@ -1,0 +1,362 @@
+<ol class="breadcrumb">
+        <li>
+            <a ui-sref="dashboard">Dashboard</a>
+        </li>
+        <li>
+            <a ui-sref="inventory">Inventory</a>
+        </li>
+        <li class="active">Purchase Order</li>
+</ol>
+<div class="inventroybox" ng-init="getAllPurchaseOrder()">
+        <!-- Content Header (Page header) -->
+    <div class="inventroy-head clearfix" ng-if="!obj.addPurchaseOrder">
+        <div class="input-search">
+            <input type="text" class="form-control" ng-model="obj.search" placeholder="Search..." my-enter="getAllPurchaseOrder('search')" />
+        </div>
+        <button class="btn btn-default" ng-click="getAllPurchaseOrder()" ng-click="obj.addSupplier = true" style="float:left">Reset</button>
+
+        <button class="btn btn-default" ng-click="obj.addPurchaseOrder = true"><b>+</b> Add New</button>
+    </div>
+        <section class="content" ng-if="obj.addPurchaseOrder">
+            <div class="panel">
+                <div class="panel-body">
+                   <form name="addPurchaseForm" novalidate>
+                    <div class="form-horizontal">
+
+
+                       <div class="form-group">
+                       <label class="col-lg-3 col-md-3 col-sm-5">Select Date</label>
+                       <div class="col-lg-2 col-md-4 col-sm-5 input-group">
+                          <input type="text" class="form-control style_picker" uib-datepicker-popup="{{format}}" ng-model="purchase.po_date" is-open="popup1.opened" datepicker-options="dateOptions"  close-text="Close" alt-input-formats="altInputFormats" placeholder="Select Date" ng-click="open1()" minDate="dateOptions.minDate" readonly/>
+                         <span class="input-group-btn">
+                           <button type="button" class="btn btn-default" ng-click="open1()"><i class="glyphicon glyphicon-calendar"></i></button>
+                         </span>
+                       </div>
+                       </div>
+                     <div class="form-group">
+                            <label class="col-lg-2 col-md-3 col-sm-5">Select Supplier</label>
+                            <div class="col-lg-4 col-md-4 col-sm-5">
+                           <!--  <select class="form-control" ng-model="purchase.supplier_id" name="supplier" required>
+                                    <option value="">
+                                        --Select Supplier--
+                                    </option>
+                                    <option ng-repeat="data in supplierData" value="{{data._id}}" ng-click="getSupplierEmail(data)">
+                                        {{ data.name }}
+                                    </option>
+                                </select>
+                              <span ng-show="addPurchaseForm.supplier.$error.required && addPurchaseForm.supplier.$error.$dirty">This field is required.</span> -->
+                           <select class="form-control"  ng-options="data as data.name for data in supplierData track by data._id" ng-model="purchase.supplier_id" ng-change="getSupplierEmail(purchase.supplier_id)">
+                           <option value="">--Please Select--</option>
+                           </select>
+                        <span ng-show="addPurchaseForm.supplier.$error.required && addPurchaseForm.supplier.$error.$dirty">This field is required.</span>
+
+                            </div>
+                        </div>
+                        <div class="form-group">
+                        <div>
+                            <label class="col-lg-2 col-md-3 col-sm-5">Supplier's Email</label>
+                             <div class="col-lg-4 col-md-4 col-sm-5">
+                              <input class="form-control" name="email" type="text" ng-model="purchase.email"  multiple-emails required />
+                              <span class="erMsg" ng-show="addPurchaseForm.email.$error.required && addPurchaseForm.email.$error.$dirty">This field is required.</span>
+                              <span class="erMsg" ng-show="addPurchaseForm.email.$invalid && addPurchaseForm.email.$dirty">Use valid email with comma seperate.</span>
+                             </div>
+                        </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 col-md-3 col-sm-5">Select Warehouse</label>
+                            <div class="col-lg-4 col-md-4 col-sm-5">
+                       <!--          <select class="form-control" name="warehouse" ng-model="purchase.warehouse_id" required>
+                                    <option value="">
+                                        --Select Warehouse--
+                                    </option>
+                                    <option ng-repeat="data in wareHouseData" value="{{data._id}}" ng-click="populateWarehouseAddress(data)">
+                                        {{ data.name }}
+                                    </option>
+                                </select> -->
+                                 <select class="form-control"  ng-options="data as data.name for data in wareHouseData track by data._id" ng-model="purchase.warehouse_id" ng-change="populateWarehouseAddress(purchase.warehouse_id)">
+                                 <option value="">--Please Select--</option>
+                                </select>
+                                <span ng-show="addPurchaseForm.warehouse.$error.required && addPurchaseForm.warehouse.$error.$dirty">Warehouse is required.</span>
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 col-md-3 col-sm-5">Shipping Adddress</label>
+                            <div class="col-lg-4 col-md-4 col-sm-5">
+                                <textarea class="form-control" ng-model="purchase.shipping_address" name="shipping_addr" rows="4" cols="50"></textarea>
+                              <!--   <span class="erMsg" ng-show="addPurchaseForm.shipping_addr.$error.required && addPurchaseForm.shipping_addr.$error.$dirty">Shipping Address is required.</span>
+                                <span class="erMsg" ng-if="addPurchaseForm.shipping_addr.$error.minlength && addPurchaseForm.shipping_addr.$dirty">Minimum length is 10!</span>
+                                <span class="erMsg" ng-if="addPurchaseForm.shipping_addr.$error.maxlength && addPurchaseForm.shipping_addr.$dirty">Maximum length is 200!</span> -->
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label class="col-lg-2 col-md-3 col-sm-5">Ship Via</label>
+                            <div class="col-lg-4 col-md-4 col-sm-5">
+                                <!-- <input class="form-control" name="ship_via" type="text" ng-model="purchase.ship_via" maxlength="20" required> -->
+                                <select class="form-control" name="ship_via" ng-model="purchase.ship_via" required>
+                                <option value="">--Ship Via--</option>
+                                <option value="Air">Air</option>
+                                <option value="Road">Road</option>
+                                <option value="Ship">Ship</option>
+                                </select>
+                                <span ng-show="addPurchaseForm.ship_via.$error.required && addPurchaseForm.ship_via.$error.$dirty">Ship_Via is required.</span>
+                            </div>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="col-lg-2 col-md-3 col-sm-5">Shipping + Customs</label>
+                          <div class="col-lg-4 col-md-4 col-sm-5">
+                          <input valid-number class="form-control" type="text" name="shippingCharges" ng-model="purchase.shipping_custom_charges" step="0.1" min="0" required/>
+                          </div>
+                          <span ng-show="addPurchaseForm.shipping_custom_charges.$error.required && addPurchaseForm.shipping_custom_charges.$error.$dirty">Shipping Charges are required.</span>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="col-lg-2 col-md-3 col-sm-5">Lead Time</label>
+                          <div class="col-lg-2 col-md-4 col-sm-5">
+                          <input valid-number class="form-control" type="text" name="lead_time" ng-model="purchase.lead_time" maxlength="3" required/>
+                          </div>
+                          <span ng-show="addPurchaseForm.lead_time.$error.required && addPurchaseForm.lead_time.$error.$dirty">Lead Time required.</span>
+                        </div>
+
+                        <div class="form-group">
+                          <label class="col-lg-2 col-md-3 col-sm-5">Market Fields</label>
+                          <div class="col-lg-2 col-md-4 col-sm-5">
+                          <select ng-model="purchase.market_field">
+                            <option value="">--Please Select--</option>
+                            <option ng-click="getebayCategories()">ebay</option>
+                            <option ng-click="getAmazonCategories()">amazon</option>
+                            <option>shopify</option>
+                          </select>
+                          </div>
+                        </div>
+
+                         <div class="form-group" ng-if="purchase.market_field=='amazon'">
+                          <label class="col-lg-2 col-md-3 col-sm-5">Categories</label>
+                          <div class="col-lg-2 col-md-4 col-sm-5">
+                          <select ng-model="purchase.categories">
+                          <option value ="">Please Select</option>
+                            <option ng-repeat="item in amazonItems track by $index">{{item}}</option>
+                          </select>
+                          </div>
+                        </div>
+
+
+                         <div class="form-group" ng-if="purchase.market_field=='ebay'">
+                          <label class="col-lg-2 col-md-3 col-sm-5">Categories</label>
+                          <div class="col-lg-2 col-md-4 col-sm-5">
+                          <select ng-model="purchase.categories">
+                          <option value ="">Please Select</option>
+                            <option ng-repeat="item in ebayItems track by $index">{{item}}</option>
+                          </select>
+                          </div>
+                        </div>
+
+                        <div class="form-group" ng-if="purchase.market_field=='ebay'">
+                          <label class="col-lg-2 col-md-3 col-sm-5">Top Rated</label>
+                          <div class="col-lg-2 col-md-4 col-sm-5">
+                          <input type="checkbox" ng-model="purchase.top_rated"/>
+                          </div>
+                        </div>
+
+
+
+                    </div>
+                    <h4>Item Details</h4>
+                    <div class="table-responsive cs_responsive set_width_col">
+
+                    <table class="table table-condensed table-striped responsive-table set_width">
+                        <thead>
+                            <tr>
+                                <th class="wdt" >#</th>
+                                <th class="wdt" >Product</th>
+                                <th class="wdt" >SKU</th>
+                                <th class="wdt" >Description</th>
+                                <th class="wdt" >Qty</th>
+                                <th class="wdt" >Rate</th>
+                                <th class="wdt" >Amount</th><br>
+                                <th class="wdt" >Unit Cost</th>
+                                <th class="wdt" >Combo Qty</th>
+                                <th class="wdt" >Package</th>
+                                <th class="wdt" >Shipping</th>
+                                <th class="wdt" >Unit Selling Price</th>
+                                <th class="wdt">SellingPrice</th>
+                                <th class="wdt" >Gross Margin</th>
+                                <th class="wdt" >Return %</th>
+                                <th class="wdt" >Margin %</th>
+                                <th class="wdt" ></th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <tr ng-repeat="(key,value) in purchase_order">
+                                <td data-label="#" ng-bind="$index+1"></td>
+                                <td class="wdt" >
+                                    <div ng-if="!purchase_order[key].product_name" angucomplete-alt  id="{{ 'autocomplete_' + $index }}"  pause="500" selected-object="selectedItem" remote-url="/inventory/autocomplete" remote-url-request-formatter="remoteUrlRequestFn" remote-url-data-field="results" title-field="item" search-fields="item" description-field="description" minlength="1" input-class="form-control form-control-small" match-class="highlight" auto-match="true"></div>
+                                    <input ng-if="purchase_order[key].product_name" class="form-control" name="product_name" type="text" disabled ng-model="purchase_order[key].product_name" maxlength="20"/>
+                                    <!-- <span ng-if="!results.length">{{error}}</span> -->
+                                </td>
+                                <td class="wdt" data-label="SKU">
+                                  <input ng-if="!purchase._id" class="form-control" name="sku" type="text" ng-model="purchase_order[key].sku" maxlength="20" required/>
+                                  <input ng-if="purchase._id" class="form-control" name="sku" type="text" ng-model="purchase_order[key].sku" maxlength="20" disabled/>
+                                </td>
+                                <td class="wdt" data-label="Description">
+                                  <input ng-if="!purchase._id" class="form-control" name="description" ng-model="purchase_order[key].description" required />
+                                  <input ng-if="purchase._id" class="form-control" name="description" ng-model="purchase_order[key].description" disabled/>
+                                </td>
+                                <td class="wdt" data-label="Qty">
+                                    <input valid-number class="form-control" name="quantity" type="text" ng-model="purchase_order[key].quantity" ng-change="calculateQuantity()" maxlength="5" required/>
+                                </td>
+                                <td class="wdt" data-label="Rate">
+                                  <input valid-number class="form-control" name="rate" type="text" ng-model="purchase_order[key].rate" ng-change="calculateRate()" required/>
+                                </td>
+                                <td class="wdt" data-label="Amount">
+                                <input valid-number class="form-control" name="amount" type="text" ng-model="purchase_order[key].amount" disabled required/>
+                                </td>
+                                <td class="wdt" data-label="Unit Cost">
+                                <input valid-number class="form-control" name="unit_cost" type="text" ng-model="purchase_order[key].unit_cost" maxlength="20" disabled required/>
+                               <!--  <span ng-show="addPurchaseForm.weight.$error.required && addPurchaseForm.weight.$error.$dirty">Weight is required.</span> -->
+                                </td>
+                                <td class="wdt" data-label="Combo Qty">
+                                <input valid-number class="form-control" name="combo_qty" type="text" ng-model="purchase_order[key].combo_qty" maxlength="20" required />
+                                <span ng-show="addPurchaseForm.combo_qty.$error.required && addPurchaseForm.combo_qty.$error.$dirty">Combo Qty is required.</span>
+                                </td>
+                                <td class="wdt" data-label="Package">
+                                <input valid-number class="form-control" name="package" type="text" ng-model="purchase_order[key].package" maxlength="20" required/>
+                                <span ng-show="addPurchaseForm.package.$error.required && addPurchaseForm.package.$error.$dirty">Package is required.</span>
+                                </td>
+                                <td class="wdt" data-label="Shipping">
+                                <input valid-number class="form-control" name="shipping" type="text" ng-model="purchase_order[key].shipping_charges" maxlength="20" ng-change="calculateTotalCost()" required/>
+                                <span ng-show="addPurchaseForm.shipping.$error.required && addPurchaseForm.shipping.$error.$dirty">Shipping is required.</span>
+                                </td>
+
+                                <td class="wdt" data-label="Unit Selling Price">
+                                <input valid-number class="form-control" name="unit_selling_price" type="text" ng-model="purchase_order[key].unit_selling_price" maxlength="20" disabled required/>
+                                <!-- <span ng-show="addPurchaseForm.unit_selling_price.$error.required && addPurchaseForm.unit_selling_price.$error.$dirty">Unit Selling Price is required.</span> -->
+                                </td>
+
+                                <td class="wdt" data-label="Selling Price">
+                                <input valid-number class="form-control" name="selling_price" type="text" ng-model="purchase_order[key].selling_price" maxlength="20" required/>
+                                <span ng-show="addPurchaseForm.selling_price.$error.required && addPurchaseForm.selling_price.$error.$dirty">Selling Price is required.</span>
+                                </td>
+
+                                <td class="wdt">
+                                <input valid-number class="form-control" name="gross_margin" type="text" ng-model="purchase_order[key].gross_margin" maxlength="20" disabled />
+                               <!--  <span ng-show="addPurchaseForm.gross_margin.$error.required && addPurchaseForm.gross_margin.$error.$dirty">Selling Price is required.</span> -->
+                                </td>
+                                 <td class="wdt">
+                                <input valid-number class="form-control" name="return_percent" type="text" ng-model="purchase_order[key].return_percent" maxlength="20" disabled/>
+                               <!--  <span ng-show="addPurchaseForm.gross_margin.$error.required && addPurchaseForm.gross_margin.$error.$dirty">Selling Price is required.</span> -->
+                                </td>
+                                 <td class="wdt">
+                                <input valid-number class="form-control" name="margin_percent" type="text" ng-model="purchase_order[key].margin_percent" maxlength="20" disabled/>
+                               <!--  <span ng-show="addPurchaseForm.gross_margin.$error.required && addPurchaseForm.gross_margin.$error.$dirty">Selling Price is required.</span> -->
+                                </td>
+                                <td class="wdt" data-label="Action"><button class="text-danger" ng-click="delPurchaseOrderlist($index)"><i class="flaticon-garbage"></i></button></td>
+                            </tr>
+                            <tr ng-show="!purchase_order.length">
+                                <td class="text-center" colspan="16">
+                                    <div class="alert alert-danger" role="alert">
+                                        No Item Available
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                    </div>
+
+                    <div class="clearfix mb-15">
+                        <a class="pull-left" style="cursor: pointer;" ng-click="addPurchaseOrderlist()"><i class="fa fa-plus"></i> Add </a>
+                    </div>
+
+
+
+                    <div class="form-group">
+                       <label class="col-sm-2 pull-left">Total PO</label>
+                       <div class="col-sm-2">
+                       <input type="text" class="form-control" name="total_PO" ng-model="purchase.total_PO" disabled>
+                       </div>
+                    </div>
+
+                    <button class="btn btn-default" ng-click="calculatePO(purchase_order)">Calculate</button>
+
+
+
+
+
+                    <div class="clearfix mb-15 text-center button-group">
+                        <button class="btn btn-default" ng-click="obj.addPurchaseOrder = false">Cancel</button>
+                        <button ng-if="!purchase._id" class="btn btn-primary" ng-click="openConfirmPurchaseOrderModal('add')" ng-disabled="addPurchaseForm.$invalid">Save</button>
+                        <button ng-if="purchase._id" class="btn btn-primary" ng-click="openConfirmPurchaseOrderModal('edit')" ng-disabled="addPurchaseForm.$invalid">Save</button>
+                    </div>
+                    </form>
+                </div>
+            </div>
+        </section><!-- Section which will show listing of Purchase Order -->
+        <section class="content" ng-if="!obj.addPurchaseOrder">
+                          <div class="inventory-body clearfix table-responsive">
+                                <form class="inventory-body clearfix table-responsive" id="listForm" name="listForm" role="form">
+                                    <table class="table table-condensed table-striped" id="example2" ng-table="tableParams">
+                                        <thead>
+                                            <tr>
+                                                <th width="12%">Suppliers</th>
+                                                <th width="14%">Warehouse</th>
+                                                <th width="8%">Date</th>
+                                                <th width="8%">Lead Time</th>
+                                                <!-- <th width="10%">Status</th> -->
+                                                <th width="10%">Amt.Paid</th>
+                                                <th width="8%">Total Amt.</th>
+                                                <th width="8%">Outs. Amt.</th>
+                                                <th width="12%">Action</th>
+
+                                            </tr>
+                                        </thead>
+                                    <tbody>
+                                        <tr ng-repeat="(key,row) in $data" ng-class="{'bg_completed':row.order_status=='Completed'}">
+                                        <td>{{row.supplier_name}}</td>
+                                        <td>{{row.warehouse_name}}</td>
+                                        <td>{{row.po_date | date}}</td>
+                                        <td>{{days_left[$index]}} days</td>
+                                        <!-- <td>
+                                          <select ng-model="row.order_status" class="order_status">
+                                          <option value="0">--Select Status--</option>
+                                              <option>Completed</option>
+                                              <option>In Progress</option>
+                                          </select>
+                                        </td> -->
+                                        <td>
+                                           $<input valid-number type="text" placeholder="Amount Paid" ng-model="row.amount_paid" class="amount_paid" ng-change="calculateOutstandingAmount(row,key)" ng-disabled="row.order_status == 'Completed' ">
+                                        </td>
+                                        <td>
+                                           <input valid-number type="text" placeholder="Total PO" ng-model="row.total_PO" class="total_amount" disabled>
+                                        </td>
+                                        <td>
+                                           <input valid-number type="text"  ng-model="row.outstanding_amount" class="outstanding_amount" disabled>
+
+                                        </td>
+                                        <td>
+
+                                  <button class="fa fa-shopping-cart" ng-click="showQuantityModal(row)" title="Quantity Check"></button>
+                                  <button class="fa fa-check" ng-click="updatePurchaseOrderData(row)" title="Update Order"></button>
+                                  <button class="fa fa-eye"  ng-click="showData(row)" data-toggle="modal" data-target="#myModal3" title="View Order"></button>
+                                  <button class="fa fa-envelope" ng-confirm-click="Are you sure you want to send email?" ng-click="sendEmail(row)" title="Email"></button>
+                                  <button class="fa fa-trash" ng-confirm-click="Are you sure you want to delete?" ng-click="deleteOrder(row)" title="Delete"></button>
+                                   <button class="fa fa-pencil" aria-hidden="true" ng-click="editOrder(row)" title="Edit"></button>
+                                        </td>
+                                        </tr>
+                                      <tr ng-show="!$data.length">
+                                        <td class="text-center" colspan="11">
+                                           <div class="alert alert-danger" role="alert">
+                                                No Purchase Order Available
+                                           </div>
+                                        </td>
+                                     </tr>
+                                </tbody>
+                                    </table>
+                                </form>
+                            </div>
+        </section>
+        <div class="loading_div" ng-show='obj.loading'>
+        <center><img class="loading_img" src="images/inprogress.gif"></center>
+        </div>
+    </div>

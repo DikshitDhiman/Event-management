@@ -1,0 +1,130 @@
+<!--banner-->
+	<!--<div class="banner about-bnr">
+		<div class="banner-info about-bnr-info">
+			<h2 class="hdng">Lorem ipsum dolor sit amet onsectetur</h2>
+			<p>Our best Florence make your day special</p>
+		</div>
+	</div>			-->
+	<!--//banner-->
+
+
+
+	<!--<link rel="stylesheet" href="http://fonts.googleapis.com/css?family=Roboto:400,100,300,500">-->
+        <!--<link rel="stylesheet" href="../Angular/Templates/LoginRegister/assets/bootstrap/css/bootstrap.min.css">-->
+        <link rel="stylesheet" href="../Angular/Templates/LoginRegister/assets/font-awesome/css/font-awesome.min.css">
+		<link rel="stylesheet" href="../Angular/Templates/LoginRegister/assets/css/form-elements.css">
+        <link rel="stylesheet" href="../Angular/Templates/LoginRegister/assets/css/style.css">
+
+
+        <link rel="shortcut icon" href="../Angular/Templates/LoginRegister/assets/ico/favi </body>
+
+</html>con.png">
+        <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../Angular/Templates/LoginRegister/assets/ico/apple-touch-icon-144-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../Angular/Templates/LoginRegister/assets/ico/apple-touch-icon-114-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../Angular/Templates/LoginRegister/assets/ico/apple-touch-icon-72-precomposed.png">
+        <link rel="apple-touch-icon-precomposed" href="../Angular/Templates/LoginRegister/assets/ico/apple-touch-icon-57-precomposed.png">
+
+
+
+<div class="contact">
+		<div class="container">
+			<div class="contact-main">
+				<h3 class="title">Profile</h3>
+			</div>
+		</div>
+</div>
+	
+		
+
+
+<!--<div ng-show = "profileData[0].usertype == 'serviceprovider'">-->
+	<div class="top-content">
+        	
+            <div class="inner-bg">
+                <div class="container">
+                	
+                    
+                    <div class="row">
+                        <div class="col-sm-5">
+                        	
+                        	<div>
+								<h3>
+								<p><b>UserType</b> : {{profileData[0].usertype}}</p>
+								<p><b>Name</b> : {{profileData[0].name}}</p>
+								<p><b>UserName</b> : {{profileData[0].username}}</p>
+								<p><b>Email</b> : {{profileData[0].email}}</p>
+								<h3>
+								<!--<p ng-show = "profileData[0].usertype == 'user'">Email: {{profileData[0].email}}</p>
+								<p ng-show = "profileData[0].usertype == 'serviceprovider'">User Type : {{profileData[0].usertype}}</p>-->
+								
+							</div>
+							<!--User Profile Start-->
+							
+
+
+
+
+
+							<!--The User Profile Endd-->
+	                        
+                        </div>
+                        
+                        <div class="col-sm-1 middle-border"></div>
+                        <div class="col-sm-1"></div>
+                        	
+                        <div class="col-sm-5">
+                        	
+                        	<div class="form-box">
+                        		<div class="form-top">
+	                        		<div class="form-top-left">
+	                        			<h3>Update now</h3>
+	                            		<p>Fill in the form below to Update Your Account:</p>
+	                        		</div>
+	                        		<div class="form-top-right">
+	                        			<i class="fa fa-pencil"></i>
+	                        		</div>
+	                            </div>
+	                            <div class="form-bottom">
+				                    <form role="form" class="registration-form">
+				                    	<div class="form-group">
+				                    		<input type="text" disabled value = "{{profileData[0].name}}" class="form-first-name form-control" id="form-first-name">
+				                        </div>
+				                        <!--<div class="form-group">
+				                        	<input type="text" ng-model="newUser.lastName" placeholder="Last name..." class="form-last-name form-control" id="form-last-name">
+				                        </div>-->
+										<div class="form-group">
+				                        	<input type="text" disabled value = "{{profileData[0].username}}" class="form-user-name form-control" id="form-user-name">
+				                        </div>
+				                        <div class="form-group">
+				                        	<input  type="email" disabled value = "{{profileData[0].email}}" class="form-user-name form-control" id="form-email">
+				                        </div>
+										<div ng-show = "profileData[0].usertype == 'user'" class="form-group">
+				                        	<input type="text" ng-model="newUser.address" placeholder="Address..." class="form-user-name form-control" id="form-address">
+				                        </div>
+										<div ng-show = "profileData[0].usertype == 'serviceprovider'" class="form-group">
+				                        	<input type="text" ng-model="newUser.servicetype" placeholder="Service Type..." class="form-user-name form-control" id="form-address">
+				                        </div>
+										<div ng-show = "profileData[0].usertype == 'serviceprovider'" class="form-group">
+				                        	<input type="text" ng-model="newUser.servicecharge" placeholder="Service Charge..." class="form-user-name form-control" id="form-address">
+				                        </div>
+							
+									
+				                        <!--<div class="form-group">
+				                        	<label class="sr-only" for="form-about-yourself">About yourself</label>
+				                        	<textarea name="form-about-yourself" placeholder="About yourself..." 
+				                        				class="form-about-yourself form-control" id="form-about-yourself"></textarea>
+				                        </div>-->
+				                        <button type="submit" class="btn" ng-click = "addProfile(newUser,profileData[0])">Update</button>
+				                    </form>
+			                    </div>
+                        	</div>
+                        	
+                        </div>
+                    </div>
+                    
+                </div>
+            </div>
+            
+        </div>
+
+                    
