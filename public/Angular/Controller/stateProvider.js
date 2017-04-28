@@ -1,4 +1,4 @@
-var app = angular.module('myApp',['ui.router', 'ngTable']);
+var app = angular.module('myApp',['ui.router']);
 
 app.config(function($stateProvider , $urlRouterProvider, $locationProvider){
    
@@ -63,7 +63,11 @@ app.config(function($stateProvider , $urlRouterProvider, $locationProvider){
         })
         .state('services', {
             url : '/services',
-            templateUrl : '../Angular/Templates/services.html'
+            templateUrl : '../Angular/Templates/services.html',
+            controller : 'serviceProviderCtrl',
+            resolve : {
+                auth : authenticate
+            }
         })
         .state('gallery', {
              url : '/gallery',
@@ -134,6 +138,14 @@ app.config(function($stateProvider , $urlRouterProvider, $locationProvider){
             controller : 'dashboardCtrl',
             resolve: {
                 auth: authenticate
+            }
+        })
+        .state('userBooking', {
+            url : '/userBooking',
+            templateUrl : "userDashboard",
+            controller : "userDashBoardController",
+            resolve : {
+                auth : authenticate
             }
         })
        
@@ -294,9 +306,49 @@ app.controller('userProfileCtrl', function($scope , $rootScope , $location , $ht
 
 
 
-
-app.controller('serviceProviderCtrl', function($scope , $rootScope , $location , $http) {
+app.controller('serviceProviderCtrl', function($scope , $rootScope , $state , $window , $location , $http) {
     console.log("serviceProviderCtrl Called");
+    $http({
+        method : "GET",
+        url : "serviceProvider"
+    }).then(function(data){
+        console.log("Success");
+        $rootScope.userData = data.data.data;
+        console.log("The data Get from Service Provider is : ",$rootScope.userData);
+        // console.log("The data Get from Service Provider is : ",data.data);
+        // $rootScope.usersTable  = $scope.data;
+    }),function(data){
+        console.log("Error");
+    }
+
+
+    $scope.bookService = function(user) {
+        console.log("You are now going to book the Service Provider");
+        console.log(user);
+        $http({
+            method : "POST",
+            url : "/user/scheduleEvent",
+            data : {
+                serviceprovider : $scope.user
+            }
+        }).then(function(data) {
+             console.log("Success");
+             console.log(data.status);
+             if(data.status === 204){
+                 console.log("You need to Update");
+                //  $window.location.href = 'userProfile';
+                $state.transitionTo ('userProfile');
+             }
+             else if (data.status === 200) {
+                 console.log("You can Book");
+                 $state.transitionTo ('userBooking');
+             }
+             else
+                console.log("Ther is Error in Find Customer");
+        }),function(data){
+            console.log("UnSuccessfull");
+        }
+    }
 })
 
 
@@ -332,3 +384,7 @@ app.controller('dashboardCtrl', function($scope , $rootScope , $location , $http
         console.log("UnsuccessFull");
     }
 })
+
+
+
+app.controller('')

@@ -7,8 +7,30 @@
 	</div>			-->
 	<!--//banner-->
 
+	<div>
+		<table>
+				<tr>
+					<th>Name</th>
+					<th>Email</th>
+					<th>Service Type</th>
+					<th>Price</th>
+				</tr>
+				
+				<tr ng-repeat="user in userData">
+					<td>{{user.name}}</td>
+					<td>{{user.email}}</td>
+					<td>{{user.servicetype}}</td>
+					<td>{{user.price}}</td>
+					<td><button type = "button" ng-click = "bookService(user)">Book</button></td>
+				</tr>
+			</tr>
+		</table>
+	</div>
+
+
+	
 	<!--Shortcodes-page -->
-	<div class="codes">
+	<!--<div class="codes">
 		<div class="container">
 			<h3 class="title">Services</h3>
 			<div class="grid_3 grid_4">
@@ -28,4 +50,6 @@
 				</div>
 			</div>
 		</div>
-	</div>
+	</div>-->
+
+	

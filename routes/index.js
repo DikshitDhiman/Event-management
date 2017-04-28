@@ -4,7 +4,8 @@ var path = require('path');
 var User =  require('./../models/loginUserSchema.js');
 var Service =  require('./../models/serviceProviderSchema.js');
 var Customer =  require('./../models/customerSchema.js');
-var UserQuery = require('./../models/userQuerySchema.js')
+var UserQuery = require('./../models/userQuerySchema.js');
+var Booked = require('./../models/customerBooking');
 var jsmd5 = require('js-md5');
 
 
@@ -80,7 +81,7 @@ router.get('/login/checkSession', function(req, res) {
 });
 
 
-
+customerBooking
 //Success
 router.post('/userRegister' ,function(req,res) {
   console.log("Sign Up Request Get",req.body.user.username);
@@ -312,7 +313,7 @@ router.get('/signout', function(req,res) {
 //Success
 router.get('/serviceProvider' , function(req,res) {
   console.log("Service Provider API");
-  if(req.session.user.usertype == "serviceprovider")
+  if(req.session.user.usertype == "user")
   {
       Service.find({}, function(err,service) {
           if(err)
@@ -321,19 +322,20 @@ router.get('/serviceProvider' , function(req,res) {
           }
 
           else if(!service) {
-            res.status(204).send("Services Not Foundd");
+            res.status(204).send({message : "Services Not Foundd"});
           }
 
           else
           {
             console.log("Services Foundd", service);
-            res.status(200).send({data : service});
+            // console.log("Services Foundd");
+            res.status(200).send({message : "Data Successfully Retreived" , data : service});
           }
       });
   }
   else
   {
-    res.status(204).send("You Don't have Permission");
+    res.status(204).send({message : "You Don't have Permission"});
   }
   
 });
@@ -794,7 +796,57 @@ router.post('/customer/addProfile' , function(req,res) {
 });
 
 
+router.post('/user/scheduleEvent' , function(req, res){
+  console.log("Customer Existence  API");
 
+  console.log("User Logged in : "+req.session.user.username);
+  Customer.findOne({'username' : req.session.user.username}, function(err, customer){
+        if(err)
+          {
+            res.status(500).send({message : "Error Occured" , error : err});
+          }
+
+        else if(!customer) {
+            res.status(204).send({message : "Customer is  Not Foundd , You Need to update your Account"});
+          }
+
+        else
+          {
+            console.log("Customer Foundd", customer);
+            // console.log("Services Foundd");
+            res.status(200).send({message : "Customer Already Updated " , data : customer});
+          }
+    });
+});
+
+
+
+router.post('/userBooking', function(req, res) {
+  console.log("Final Booking API of EVENT PEOVIDER");
+  var newBooking = new Booked({
+    'cust' : CustomerID,
+    'srvc' : ServiceProviderID  
+  });
+
+  console.log("The Info is Going to Book is : ",newBooking);
+  newBooking.save(function(err,doc) {
+      if(err)
+          {
+            res.status(500).send({message : "Error Occured" , error : err});
+          }
+
+      else if(!doc) {
+            res.status(204).send({message : "New Booking can not Save"});
+          }
+
+      else
+          {
+            console.log("Booking SuccessFull", doc);
+            // console.log("Services Foundd");
+            res.status(200).send({message : "The Event Successfully Booked " , data : doc});
+          }
+    });
+});
 
 
 module.exports = router;
