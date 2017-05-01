@@ -8,7 +8,8 @@ var mongoose = require('mongoose');
 var index = require('./routes/index');
 var users = require('./routes/users');
 var session = require('express-session')
-
+var multer = require('multer');
+var bodyParser =	require("body-parser");
 
 var app = express();
 
@@ -30,6 +31,8 @@ app.use(session({
   saveUninitialized: true
 }))
 
+app.use(bodyParser.urlencoded({ extended: true }));
+app.use(bodyParser.json());
 
 app.use(express.static(path.join(__dirname, 'public')));
 

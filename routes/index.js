@@ -1,11 +1,12 @@
 var express = require('express');
 var router = express.Router();
+var multer = require('multer');
 var path = require('path');
 var User =  require('./../models/loginUserSchema.js');
 var Service =  require('./../models/serviceProviderSchema.js');
 var Customer =  require('./../models/customerSchema.js');
 var UserQuery = require('./../models/userQuerySchema.js');
-var Booked = require('./../models/customerBooking');
+var Booked = require('./../models/customerBooking.js');
 var jsmd5 = require('js-md5');
 
 
@@ -13,6 +14,17 @@ var jsmd5 = require('js-md5');
 /*router.get('/', function(req, res, next) {
   res.render('index', { title: 'Express' });
 });*/
+var storage	=	multer.diskStorage({
+  destination: function (req, file, callback) {
+    callback(null, '.public/images/uploads');
+  },
+  filename: function (req, file, callback) {
+    callback(null, file.fieldname + '-' + Date.now() + '.' + mime.extension(file.mimetype));
+  }
+});
+var upload = multer({ //multer settings
+    storage: storage
+  }).single('file');
 
 
 
@@ -81,16 +93,15 @@ router.get('/login/checkSession', function(req, res) {
 });
 
 
-customerBooking
 //Success
 router.post('/userRegister' ,function(req,res) {
-  console.log("Sign Up Request Get",req.body.user.username);
+  console.log("Sign Up Request Get",req.body.user.userName);
   var pass = jsmd5(req.body.user.pass);
   var cpass = jsmd5(req.body.user.cpass);
   console.log(pass , cpass);
   if(pass==cpass)
   {
-    User.findOne({"username" : req.body.user.username},function(err,data)
+    User.findOne({"username" : req.body.user.userName},function(err,data)
       {
           if(err)
           {
@@ -110,7 +121,7 @@ router.post('/userRegister' ,function(req,res) {
               var newuser = new User({
                 'usertype' : req.body.user.usertype,
                 'name' : req.body.user.firstName+" "+req.body.user.lastName,
-                'username' : req.body.user.username,
+                'username' : req.body.user.userName,
                 'email' : req.body.user.email,
                 'password' : pass
               });
@@ -218,7 +229,7 @@ router.post('/serviceRegistration', function(req,res) {
 });
 
 
-router.get('/userProfile' , function(req,res) {
+/*router.get('/userProfile' , function(req,res) {
     console.log("The userProfile API");
     //console.log("The UserType is : "+req.session.user.usertype);
     if(req.session.user)
@@ -243,7 +254,7 @@ router.get('/userProfile' , function(req,res) {
     {
       res.status(204).send({message : "You Are not Logged In"});
     }
-});
+});*/
 
 
 //Success
@@ -339,6 +350,21 @@ router.get('/serviceProvider' , function(req,res) {
   }
   
 });
+
+
+router.post('/imageUpload', function(req, res) {
+  console.log("Image Upload API");
+  upload(req,res,function(err){
+      if(err){
+          res.json({error_code:1,err_desc:err});
+          return;
+          }
+          console.log("image",req.session.user.name);
+          res.json({error_code:0,err_desc:null});
+      });
+})
+
+
 
 
 //Success
@@ -798,7 +824,7 @@ router.post('/customer/addProfile' , function(req,res) {
 
 router.post('/user/scheduleEvent' , function(req, res){
   console.log("Customer Existence  API");
-
+  //console.log("The Service Provider is : ",JSON.stringify(req.body.serviceprovider.name));
   console.log("User Logged in : "+req.session.user.username);
   Customer.findOne({'username' : req.session.user.username}, function(err, customer){
         if(err)
@@ -814,7 +840,10 @@ router.post('/user/scheduleEvent' , function(req, res){
           {
             console.log("Customer Foundd", customer);
             // console.log("Services Foundd");
+            req.session.customer = customer;
+            console.log("The Customer Session with name : ",req.session.customer.name);
             res.status(200).send({message : "Customer Already Updated " , data : customer});
+            
           }
     });
 });
@@ -823,9 +852,11 @@ router.post('/user/scheduleEvent' , function(req, res){
 
 router.post('/userBooking', function(req, res) {
   console.log("Final Booking API of EVENT PEOVIDER");
+  console.log("The Customer who want to Booking is : ",req.session.customer.name);
+  console.log("The Service Provider is : ",req.body.serviceprovider.name);
   var newBooking = new Booked({
-    'cust' : CustomerID,
-    'srvc' : ServiceProviderID  
+    'cust' : req.session.customer._id,
+    'srvc' : req.body.serviceprovider._id  
   });
 
   console.log("The Info is Going to Book is : ",newBooking);

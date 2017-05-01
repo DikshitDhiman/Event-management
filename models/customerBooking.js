@@ -1,5 +1,5 @@
 var mongoose = require('mongoose');
-var Schema = mongoose.schema;
+var Schema = mongoose.Schema;
 
 var newBooking = new Schema({
 	cust : { type: Schema.Types.ObjectId, ref: 'customer' },

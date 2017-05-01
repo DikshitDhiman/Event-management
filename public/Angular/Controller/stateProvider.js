@@ -142,8 +142,7 @@ app.config(function($stateProvider , $urlRouterProvider, $locationProvider){
         })
         .state('userBooking', {
             url : '/userBooking',
-            templateUrl : "userDashboard",
-            controller : "userDashBoardController",
+            controller : "userBookingCtrl",
             resolve : {
                 auth : authenticate
             }
@@ -151,7 +150,7 @@ app.config(function($stateProvider , $urlRouterProvider, $locationProvider){
        
 });
 
-
+//Main Controller Load At very First of Programmer
 app.controller('myController', function($scope , $rootScope , $http, $window, $location, $log) {
     console.log("myController");
 
@@ -198,7 +197,7 @@ app.controller('loginCtrl',function($scope , $rootScope , $location , $http, $st
                 console.log("Success",$scope.userLogData);
                 $scope.message = "Login Successfully";
                 $rootScope.load();
-                $state.transitionTo ('services');
+                //$state.transitionTo ('services');
 
                 
             }),function(data){
@@ -239,7 +238,7 @@ app.controller('registerCtrl' , function($scope , $rootScope , $http) {
     }
 })
 
-
+// users And Service Provider Can Logout
 app.controller('logoutCtrl',function($scope , $location , $http) {
     console.log("Logging Out");
     $http({
@@ -255,7 +254,7 @@ app.controller('logoutCtrl',function($scope , $location , $http) {
     }
 })
 
-
+// The User DAshBoard With A Update Field
 app.controller('userProfileCtrl', function($scope , $rootScope , $location , $http) {
     console.log("This is userProfileCtrl Controller");
     $http({
@@ -282,6 +281,10 @@ app.controller('userProfileCtrl', function($scope , $rootScope , $location , $ht
             }).then(function(data) {
                 console.log("Success");
                 $rootScope.updateProfile = data.data;
+                if($rootScope.updateProfile.status === 200){
+                    $state.transitionTo('serviceProvider');
+                }
+        
             }),function(data){
                 console.log("UnsuccessFull");
             }
@@ -305,12 +308,12 @@ app.controller('userProfileCtrl', function($scope , $rootScope , $location , $ht
 })
 
 
-
+// Get all the service provider information on to the Screen
 app.controller('serviceProviderCtrl', function($scope , $rootScope , $state , $window , $location , $http) {
     console.log("serviceProviderCtrl Called");
     $http({
         method : "GET",
-        url : "serviceProvider"
+        url : "/serviceProvider"
     }).then(function(data){
         console.log("Success");
         $rootScope.userData = data.data.data;
@@ -322,15 +325,14 @@ app.controller('serviceProviderCtrl', function($scope , $rootScope , $state , $w
     }
 
 
-    $scope.bookService = function(user) {
-        console.log("You are now going to book the Service Provider");
-        console.log(user);
+    $scope.bookService = function(serviceprovider) {
+        console.log("You are now going to book the Service Provider : ");
+        console.log(JSON.stringify(serviceprovider));
+        $rootScope.serviceprovider = serviceprovider;
         $http({
             method : "POST",
             url : "/user/scheduleEvent",
-            data : {
-                serviceprovider : $scope.user
-            }
+            data : {serviceprovider : serviceprovider}
         }).then(function(data) {
              console.log("Success");
              console.log(data.status);
@@ -352,7 +354,7 @@ app.controller('serviceProviderCtrl', function($scope , $rootScope , $state , $w
 })
 
 
-
+// UserQuery will save in a seperate Database
 app.controller('contactQueryCtrl', function($scope , $rootScope , $location , $http) {
     console.log("contactQueryCtrl Called");
     $scope.contactQuery = function(query) {
@@ -370,7 +372,7 @@ app.controller('contactQueryCtrl', function($scope , $rootScope , $location , $h
 })
 
 
-
+// User+Service Provider DashBoard
 app.controller('dashboardCtrl', function($scope , $rootScope , $location , $http){
     console.log("This is DashBoard Controller");
     $http({
@@ -386,5 +388,15 @@ app.controller('dashboardCtrl', function($scope , $rootScope , $location , $http
 })
 
 
-
-app.controller('')
+app.controller('userBookingCtrl', function($scope , $rootScope , $location , $http) {
+    console.log("Finally You Are going to  Book Event Owner Mr. : ",$rootScope.serviceprovider.name);
+    $http({
+        method : "POST",
+        url : "/userBooking",
+        data : {serviceprovider : $rootScope.serviceprovider}
+    }).then(function(data) {
+        console.log("Success");
+    }),function(data) {
+        console.log("UnSuccessFull");
+    }
+})
